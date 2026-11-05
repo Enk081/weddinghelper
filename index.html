@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light only">
+<title>婚禮籌備助手</title>
+<meta name="theme-color" content="#1f3a5f">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="婚禮助手">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<style>
+:root{color-scheme:light;--paper:#f6f1e7;--card:#fffdf8;--ink:#2a2723;--mute:#857c70;--line:#e5dbc8;--ai:#1f3a5f;--ai2:#2f5583;--aiL:#e6edf5;--shu:#b8322a;--shuL:#f8e6e3;--gold:#a8844e;--ok:#3d7a5a;--okL:#e3f0e8;--warn:#b7791f;--warnL:#fbf0dc}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 "Noto Sans TC",system-ui,-apple-system,sans-serif;-webkit-text-size-adjust:100%}
+button,input,select,textarea{font:inherit;color:inherit}
+.serif{font-family:"Noto Serif TC",serif}
+header{background:var(--ai);color:#fff;padding:18px 16px 14px;text-align:center;position:relative;background-image:radial-gradient(circle at 20% 0,rgba(255,255,255,.08),transparent 60%)}
+header h1{margin:0;font:700 22px/1.3 "Noto Serif TC",serif;letter-spacing:.12em;cursor:pointer}
+header h1 small{font-size:12px;opacity:.6;margin-left:6px;letter-spacing:0}
+header p{margin:4px 0 0;font-size:12.5px;opacity:.85;letter-spacing:.05em}
+nav{position:sticky;top:0;z-index:20;background:var(--card);border-bottom:1px solid var(--line);display:flex;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav button{flex:0 0 auto;border:0;background:none;padding:10px 12px 8px;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:12px;color:var(--mute);border-bottom:3px solid transparent}
+nav button span{font-size:19px;line-height:1}
+nav button.on{color:var(--ai);border-bottom-color:var(--shu);font-weight:700}
+main{max-width:720px;margin:0 auto;padding:14px 12px 90px}
+h2{font:700 18px/1.3 "Noto Serif TC",serif;margin:0;letter-spacing:.06em}
+.bar{display:flex;align-items:center;gap:8px;margin:4px 0 10px}
+.bar h2{flex:1}
+.center{text-align:center}
+.hint{font-size:12.5px;color:var(--mute);margin:-4px 0 10px}
+.mute{color:var(--mute)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px}
+.btn{border:0;background:var(--ai);color:#fff;padding:8px 14px;border-radius:999px;font-weight:500;cursor:pointer;white-space:nowrap}
+.btn.shu{background:var(--shu)}
+.btn.ghost{background:transparent;color:var(--ai);border:1px solid var(--line)}
+.btn.danger{color:var(--shu)}
+.btn.sm{padding:5px 10px;font-size:13px}
+.ic{border:0;background:none;width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer;color:var(--mute);flex:0 0 auto}
+.ic:active{background:var(--line)}
+.row{display:flex;align-items:center;gap:10px}
+.row .grow{flex:1;min-width:0}
+.chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.chip{font-size:12px;padding:2px 9px;border-radius:999px;background:var(--aiL);color:var(--ai)}
+.chip.shu{background:var(--shuL);color:var(--shu)}
+.chip.ok{background:var(--okL);color:var(--ok)}
+.chip.warn{background:var(--warnL);color:var(--warn)}
+.chip.gray{background:#eee9df;color:var(--mute)}
+input[type=checkbox]{width:20px;height:20px;accent-color:var(--shu);flex:0 0 auto;margin:0}
+.done .t{text-decoration:line-through;color:var(--mute)}
+.seg{display:flex;justify-content:center;gap:6px;margin-bottom:12px}
+.seg button{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 16px;cursor:pointer}
+.seg button.on{background:var(--ai);border-color:var(--ai);color:#fff}
+/* countdown */
+.cd{text-align:center;padding:26px 14px;background:var(--card) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='16'%3E%3Cpath d='M0 8a7 7 0 0 1 14 0a7 7 0 0 1 14 0' fill='none' stroke='%23e9e0cd' stroke-width='1'/%3E%3C/svg%3E")}
+.cd .n{font:700 64px/1 "Noto Serif TC",serif;color:var(--shu);margin:8px 0 4px}
+.cd .stamp{display:inline-block;border:2px solid var(--shu);color:var(--shu);font:700 13px "Noto Serif TC",serif;padding:2px 8px;border-radius:4px;transform:rotate(-4deg)}
+/* calendar */
+.calh{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;text-align:center}
+.cal .wd{font-size:12px;color:var(--mute);padding:4px 0}
+.day{position:relative;border:0;background:none;aspect-ratio:1;border-radius:10px;cursor:pointer;font-size:14px}
+.day.today{outline:1.5px solid var(--ai2)}
+.day.sel{background:var(--ai);color:#fff}
+.day.wed{background:var(--shu);color:#fff;font-weight:700}
+.day i{position:absolute;left:50%;bottom:5px;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--shu)}
+.day.sel i,.day.wed i{background:#fff}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer}
+.stat b{display:block;font:700 20px "Noto Serif TC",serif;color:var(--ai)}
+.stat span{font-size:12.5px;color:var(--mute)}
+.search{width:100%;padding:10px 14px;border:1px solid var(--line);border-radius:999px;background:#fff;font-size:16px}
+.res{margin-top:8px}
+.res .hit{display:flex;justify-content:space-between;padding:7px 4px;border-bottom:1px dashed var(--line)}
+.res .hit b{color:var(--shu)}
+/* timeline */
+.tl{display:flex;gap:10px;align-items:flex-start}
+.tl-time{font:700 15px "Noto Serif TC",serif;color:var(--ai);min-width:46px;padding-top:1px}
+.tl-body{flex:1;min-width:0}
+.tl-body p{margin:3px 0 0;font-size:13.5px;white-space:pre-wrap}
+.tl.now{border-color:var(--shu);box-shadow:0 0 0 2px var(--shuL)}
+.tl.now .tl-time::after{content:"進行中";display:block;font:500 11px "Noto Sans TC";color:var(--shu)}
+.handle{touch-action:none;cursor:grab;color:#b9ae9b;font-size:20px;line-height:1;padding:2px 2px 8px;user-select:none}
+.dragging{opacity:.85;box-shadow:0 8px 20px rgba(0,0,0,.15);transform:scale(1.01);position:relative;z-index:5}
+.now-card{border-left:4px solid var(--shu)}
+/* tables */
+.sum{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:10px}
+.sum div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 4px;text-align:center}
+.sum b{display:block;font:700 18px "Noto Serif TC",serif;color:var(--ai)}
+.sum span{font-size:11.5px;color:var(--mute)}
+.tbl.hl{border-color:var(--shu);box-shadow:0 0 0 2px var(--shuL)}
+.tno{font:700 16px "Noto Serif TC",serif}
+.guest{font-size:12.5px;padding:2px 8px;border-radius:6px;background:#f3ede1}
+.guest.m{background:var(--shu);color:#fff}
+/* money */
+.big{text-align:center;padding:18px}
+.big b{display:block;font:700 34px "Noto Serif TC",serif;color:var(--shu)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px}
+.grid3 div{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center}
+.grid3 b{display:block;font-weight:700}
+.grid3 span{font-size:12px;color:var(--mute)}
+.mrow{display:flex;justify-content:space-between;font-size:13.5px;padding:2px 0}
+.pbar{height:8px;background:#eee6d6;border-radius:9px;overflow:hidden;margin:4px 0 8px}
+.pbar i{display:block;height:100%;background:var(--ai2);border-radius:9px}
+table.t{width:100%;border-collapse:collapse;font-size:14px}
+table.t td,table.t th{padding:7px 4px;border-bottom:1px dashed var(--line);text-align:right}
+table.t td:first-child,table.t th:first-child{text-align:left}
+/* group head */
+.gh{font-size:12.5px;color:var(--mute);margin:14px 2px 6px;letter-spacing:.1em}
+.empty{text-align:center;color:var(--mute);padding:28px 10px;font-size:14px}
+/* modal */
+#mask{position:fixed;inset:0;background:rgba(20,25,35,.45);z-index:50;display:none;align-items:flex-end;justify-content:center}
+#mask.on{display:flex}
+#modal{background:var(--card);width:100%;max-width:560px;max-height:92vh;overflow:auto;border-radius:16px 16px 0 0;padding:16px 16px calc(16px + env(safe-area-inset-bottom))}
+@media(min-width:600px){#mask{align-items:center}#modal{border-radius:16px}}
+#modal h3{margin:0 0 12px;font:700 17px "Noto Serif TC",serif}
+.fld{margin-bottom:11px}
+.fld>label{display:block;font-size:12.5px;color:var(--mute);margin-bottom:3px}
+.fld input:not([type=checkbox]),.fld select,.fld textarea{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:#fff;font-size:16px}
+.ck{display:flex;align-items:center;gap:8px;padding:4px 0;font-size:15px}
+.multi{border:1px solid var(--line);border-radius:9px;padding:6px 10px;background:#fff;max-height:200px;overflow:auto}
+.mbtns{display:flex;gap:8px;margin-top:14px;align-items:center}
+#toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:rgba(30,35,45,.92);color:#fff;padding:9px 16px;border-radius:999px;font-size:14px;z-index:60;opacity:0;transition:.25s;pointer-events:none;max-width:90vw;text-align:center}
+#toast.on{opacity:1}
+.banner{background:var(--warnL);color:var(--warn);font-size:13px;padding:8px 12px;border-radius:10px;margin-bottom:10px}
+textarea.code{width:100%;font:12px/1.4 ui-monospace,monospace;padding:8px;border:1px solid var(--line);border-radius:9px;background:#fff}
+details summary{cursor:pointer;color:var(--ai);font-size:14px;margin:6px 0}
+.sec{margin-bottom:16px}
+.sec h3{font:700 15px "Noto Serif TC",serif;margin:0 0 6px}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+#print{display:none}
+@media print{body{background:#fff}header,nav,main,#mask,#toast{display:none!important}#print{display:block;font-size:12px;color:#000}
+#print h1{font:700 18px "Noto Serif TC",serif;margin:0 0 2px}#print h2{font-size:14px;margin:14px 0 4px;border-bottom:2px solid #000;padding-bottom:2px}
+#print table{width:100%;border-collapse:collapse}#print td,#print th{border:1px solid #999;padding:4px 6px;vertical-align:top;text-align:left}#print th{background:#eee}
+#print .pb{page-break-before:always}}
+</style>
+</head>
+<body>
+<header><h1 id="ttl" onclick="openSettings()"></h1><p id="sub"></p></header>
+<nav id="nav"></nav>
+<main id="view"></main>
+<div id="mask" onclick="if(event.target===this)closeModal()"><div id="modal"></div></div>
+<div id="toast"></div>
+<div id="print"></div>
+<script id="embed-data">window.EMBED=null;</script>
+
+<script>
+const KEY='wedding-helper-v1';
+const $=s=>document.querySelector(s);
+const uid=()=>Math.random().toString(36).slice(2,9);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num=v=>Number(String(v??'').replace(/[^\d.-]/g,''))||0;
+const money=n=>'$'+Math.round(n||0).toLocaleString('zh-TW');
+const pad=n=>String(n).padStart(2,'0');
+const dstr=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const WD='日一二三四五六';
+const fmtD=s=>{if(!s)return'';const d=new Date(s+'T00:00');return isNaN(d)?s:`${d.getMonth()+1}/${d.getDate()}（${WD[d.getDay()]}）`};
+const splitNames=s=>String(s||'').split(/[\n,，、;；]+/).map(x=>x.trim()).filter(Boolean);
+
+function seed(){
+  const st=(role,note)=>({id:uid(),name:'（待填）',role,phone:'',note});
+  const staff=[st('總召／現場總指揮','掌握流程時間、與飯店窗口聯繫'),st('收禮台 A','收禮金、登記禮金簿'),st('收禮台 B','發喜糖、引導賓客簽名'),st('招待','帶位、協助長輩入座'),st('音控／影片','歌單與影片播放'),st('新娘助手','協助換裝、補妝、遞戒指')];
+  const fl=(time,name,content,people,si=[])=>({id:uid(),time,name,content,people,staffIds:si.map(i=>staff[i].id)});
+  const flow=[
+    fl('10:00','工作人員集合','分配任務、領取道具、確認動線','全體工作人員',[0]),
+    fl('11:00','收禮台就位','擺放簽名綢、禮金簿、喜糖','收禮台',[1,2]),
+    fl('11:30','迎賓','新人門口迎賓、拍照（暫定時間）','新人、招待',[3]),
+    fl('12:00','入席・開席','賓客入座，主持人開場（暫定時間）','主持人、音控',[0,4]),
+    fl('12:10','新人進場','第一次進場','新人、音控',[4]),
+    fl('12:40','感謝致詞・播放影片','A 面回顧影片','新人、音控',[4]),
+    fl('13:00','新人換裝','新娘換第二套禮服','新娘、新娘助手',[5]),
+    fl('13:15','二次進場・敬酒','逐桌敬酒','新人、雙方家長',[0]),
+    fl('14:00','送客','門口送客、發送小物','新人、收禮台',[2]),
+    fl('14:30','撤場・清點','清點禮金與道具歸還','總召、收禮台',[0,1]),
+  ];
+  const pr=(name,qty,fi,si,note='')=>({id:uid(),name,qty,flowId:flow[fi].id,staffId:staff[si].id,note,done:false});
+  const props=[pr('簽名綢／簽到本','1',1,2),pr('禮金簿＋筆','2',1,1),pr('喜糖','依桌數',1,2),pr('婚紗照展示架','2',1,0),pr('音樂與影片 USB','1',4,4,'備份一份在手機'),pr('婚戒','1 對',4,5),pr('送客小物','依人數',8,2)];
+  const sc=(date,title,note='')=>({id:uid(),date,title,note,done:false});
+  const tk=(title,cat)=>({id:uid(),title,cat,owner:'',done:false});
+  return {
+    title:'婚禮籌備助手',couple:'李昆蔚 ✕ 甘育甄',date:'2027-03-28',time:'11:30',venue:'高雄翰品酒店',
+    homeMode:'cd',moneyMode:'list',
+    schedule:[sc('2026-11-30','確認宴會廳名稱與試菜日','範例，可修改'),sc('2026-12-15','寄出線上喜帖'),sc('2027-01-31','回覆表單截止（暫定）'),sc('2027-02-28','向飯店確認最終桌數'),sc('2027-03-21','工作人員說明會／彩排'),sc('2027-03-28','婚禮當天','高雄翰品酒店')],
+    tasks:[tk('確認宴會廳名稱','場地'),tk('試菜、確認菜單','場地'),tk('線上喜帖完成','物品'),tk('統計回覆表單','流程'),tk('排座位表','流程'),tk('主持人','人員'),tk('新娘秘書','人員'),tk('婚攝／婚錄','人員'),tk('婚戒','物品'),tk('喜糖／送客小物','物品'),tk('進場與敬酒歌單','流程'),tk('工作人員分工確認','人員')],
+    props,staff,flow,
+    tables:[{id:uid(),no:'主桌',name:'新人與雙方家長',side:'共同',cap:10,status:'wait',guests:'',note:''}],
+    expenses:[],updatedAt:Date.now()
+  };
+}
+
+let S,canStore=true;
+try{const r=localStorage.getItem(KEY);if(r)S=JSON.parse(r)}catch(e){canStore=false}
+const IS_FILE=!/^https?:/.test(location.protocol);
+if(window.EMBED&&Array.isArray(window.EMBED.flow)&&(!S||!Array.isArray(S.flow)||(window.EMBED.updatedAt||0)>(S.updatedAt||0))){S=window.EMBED;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+if(!S||!Array.isArray(S.flow))S=seed();
+function save(){S.updatedAt=Date.now();try{localStorage.setItem(KEY,JSON.stringify(S));canStore=true}catch(e){canStore=false}}
+
+let tab='home',calY,calM,selDay='',propFilter='',seatQ='';
+try{tab=localStorage.getItem(KEY+'-tab')||'home'}catch(e){}
+{const t=new Date();calY=t.getFullYear();calM=t.getMonth()}
+
+const TABS=[['home','首頁','🏠'],['flow','流程','⏱️'],['tables','桌數座位','🍽️'],['staff','工作人員','👨‍💼'],['props','道具','🎒'],['money','記帳','💰'],['schedule','日程','🗓️'],['tasks','籌備','✅'],['sync','同步','🔁']];
+function go(t){tab=t;try{localStorage.setItem(KEY+'-tab',t)}catch(e){}render();window.scrollTo(0,0)}
+
+function render(){
+  $('#ttl').innerHTML=esc(S.title)+'<small>✎</small>';
+  $('#sub').textContent=[S.couple,S.date&&S.date.replace(/-/g,'.'),S.venue].filter(Boolean).join(' · ');
+  $('#nav').innerHTML=TABS.map(([k,l,i])=>`<button class="${tab==k?'on':''}" onclick="go('${k}')"><span>${i}</span>${l}</button>`).join('');
+  const v=VIEWS[tab]||VIEWS.home;
+  const ub=new Date(S.updatedAt||Date.now()).toLocaleString('zh-TW',{hour12:false,month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  $('#view').innerHTML=(canStore?'':`<div class="banner">${window.EMBED?'離線版可正常查看；這台裝置無法保存修改。':'此瀏覽器無法自動儲存，關閉前請到「同步」導出資料。'}</div>`)+(!navigator.onLine&&tab=='home'?`<div class="banner">📴 目前沒有網路，顯示的是手機裡存的資料（更新於 ${ub}）</div>`:'')+(IS_FILE&&tab=='home'?`<div class="banner" style="background:var(--aiL);color:var(--ai)">📱 離線版・資料更新於 ${ub}</div>`:'')+v();
+  if(tab=='flow')enableDrag($('#flowlist'),ids=>{S.flow=ids.map(id=>S.flow.find(f=>f.id==id)).filter(Boolean);save();render()});
+  if(tab=='tables'&&seatQ){const i=$('#seatq2');if(i){i.value=seatQ;seatSearch(seatQ,'seatres2',true)}}
+}
+
+/* ---------- helpers ---------- */
+const chip=(t,c='')=>`<span class="chip ${c}">${esc(t)}</span>`;
+const staffLabel=s=>s?(s.role+(s.name&&!/待填/.test(s.name)?'・'+s.name:'')):'';
+const byId=(l,id)=>S[l].find(x=>x.id==id);
+function daysLeft(){const w=new Date(S.date+'T00:00');const t=new Date();t.setHours(0,0,0,0);return Math.round((w-t)/864e5)}
+function currentFlow(){
+  if(S.date!==dstr(new Date()))return null;
+  const n=new Date(),m=n.getHours()*60+n.getMinutes();
+  const sorted=S.flow.filter(f=>f.time).map(f=>({f,m:+f.time.slice(0,2)*60+ +f.time.slice(3,5)})).sort((a,b)=>a.m-b.m);
+  let cur=null,next=null;for(const x of sorted){if(x.m<=m)cur=x.f;else{next=x.f;break}}
+  return {cur,next};
+}
+function tog(l,id,k){const x=byId(l,id);if(!x)return;x[k]=!x[k];save();render()}
+function upsert(l,id,d){if(id)Object.assign(byId(l,id),d);else S[l].push({id:uid(),...d})}
+function labelOf(x){return x.title||x.item||x.role||x.name||(x.no?('第 '+x.no+' 桌'):'這筆資料')}
+function del(l,id){
+  const x=byId(l,id);if(!x)return;
+  askConfirm(`確定刪除「${labelOf(x)}」？`,()=>{
+    S[l]=S[l].filter(y=>y.id!=id);
+    if(l=='flow')S.props.forEach(p=>{if(p.flowId==id)p.flowId=''});
+    if(l=='staff'){S.props.forEach(p=>{if(p.staffId==id)p.staffId=''});S.flow.forEach(f=>f.staffIds=(f.staffIds||[]).filter(s=>s!=id))}
+    save();render();toast('已刪除');
+  });
+}
+function toast(t){const e=$('#toast');e.textContent=t;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2400)}
+function openModal(h){$('#modal').innerHTML=h;$('#mask').classList.add('on')}
+function closeModal(){$('#mask').classList.remove('on')}
+function askConfirm(msg,cb){openModal(`<h3>請確認</h3><p>${esc(msg)}</p><div class="mbtns"><span style="flex:1"></span><button class="btn ghost" onclick="closeModal()">取消</button><button class="btn shu" id="m_yes">確定</button></div>`);$('#m_yes').onclick=()=>{closeModal();cb()}}
+
+/* ---------- form builder ---------- */
+function openForm(title,fields,obj,onSave,delList){
+  const html=fields.map(fd=>{
+    let v=obj[fd.k];if(v==null)v='';if(fd.t=='number'&&v===0)v='';
+    const id='f_'+fd.k;let inp;
+    if(fd.t=='textarea')inp=`<textarea id="${id}" rows="${fd.rows||3}" placeholder="${esc(fd.ph||'')}">${esc(v)}</textarea>`;
+    else if(fd.t=='select')inp=`<select id="${id}">${fd.opts.map(o=>`<option value="${esc(o[0])}" ${o[0]==v?'selected':''}>${esc(o[1])}</option>`).join('')}</select>`;
+    else if(fd.t=='check')inp=`<label class="ck"><input type="checkbox" id="${id}" ${v?'checked':''}> ${esc(fd.txt||'')}</label>`;
+    else if(fd.t=='multi')inp=`<div class="multi" id="${id}">${fd.opts.map(o=>`<label class="ck"><input type="checkbox" value="${esc(o[0])}" ${(v||[]).includes(o[0])?'checked':''}> ${esc(o[1])}</label>`).join('')||'<span class="mute">尚無資料，請先新增</span>'}</div>`;
+    else inp=`<input id="${id}" type="${fd.t=='number'?'text':(fd.t||'text')}" ${fd.t=='number'?'inputmode="numeric"':''} value="${esc(v)}" placeholder="${esc(fd.ph||'')}" ${fd.list?`list="dl_${fd.k}"`:''}>`+(fd.list?`<datalist id="dl_${fd.k}">${fd.list.map(x=>`<option value="${esc(x)}">`).join('')}</datalist>`:'');
+    return `<div class="fld">${fd.t=='check'?'':`<label for="${id}">${esc(fd.l)}${fd.req?' *':''}</label>`}${inp}</div>`;
+  }).join('');
+  openModal(`<h3>${esc(title)}</h3>${html}<div class="mbtns">${obj.id&&delList?'<button class="btn ghost danger" id="m_del">刪除</button>':''}<span style="flex:1"></span><button class="btn ghost" onclick="closeModal()">取消</button><button class="btn" id="m_ok">儲存</button></div>`);
+  if($('#m_del'))$('#m_del').onclick=()=>{closeModal();del(delList,obj.id)};
+  $('#m_ok').onclick=()=>{
+    const out={};
+    for(const fd of fields){const el=$('#f_'+fd.k);
+      if(fd.t=='check')out[fd.k]=el.checked;
+      else if(fd.t=='multi')out[fd.k]=[...el.querySelectorAll('input:checked')].map(i=>i.value);
+      else if(fd.t=='number')out[fd.k]=num(el.value);
+      else out[fd.k]=el.value.trim();
+      if(fd.req&&!out[fd.k]){toast('請填寫「'+fd.l+'」');el.focus();return}
+    }
+    onSave(out);closeModal();save();render();toast('已儲存');
+  };
+}
+const NAMES={schedule:'日程',tasks:'籌備項目',props:'道具',staff:'工作人員',tables:'桌次',flow:'流程',expenses:'支出'};
+function fieldsFor(l){
+  const flowOpts=[['','（不指定）'],...S.flow.map(f=>[f.id,(f.time?f.time+' ':'')+f.name])];
+  const staffOpts=[['','（不指定）'],...S.staff.map(s=>[s.id,staffLabel(s)])];
+  return {
+    schedule:[{k:'date',l:'日期',t:'date',req:1},{k:'title',l:'事項',req:1},{k:'note',l:'備註',t:'textarea',rows:2},{k:'done',t:'check',txt:'已完成'}],
+    tasks:[{k:'title',l:'項目名稱',req:1},{k:'cat',l:'分類',list:['場地','人員','物品','流程','其他']},{k:'owner',l:'負責人'},{k:'done',t:'check',txt:'已完成'}],
+    props:[{k:'name',l:'道具名稱',req:1},{k:'qty',l:'數量'},{k:'flowId',l:'對應流程環節',t:'select',opts:flowOpts},{k:'staffId',l:'負責工作人員',t:'select',opts:staffOpts},{k:'note',l:'備註',t:'textarea',rows:2},{k:'done',t:'check',txt:'已準備好'}],
+    staff:[{k:'role',l:'負責事項',req:1,ph:'例：收禮台'},{k:'name',l:'姓名'},{k:'phone',l:'電話',t:'tel'},{k:'note',l:'工作說明',t:'textarea',rows:3}],
+    tables:[{k:'no',l:'桌號',req:1,ph:'例：1、主桌'},{k:'name',l:'桌名／分類',ph:'例：男方同事'},{k:'side',l:'所屬',t:'select',opts:[['男方','男方'],['女方','女方'],['共同','共同']]},{k:'cap',l:'座位數',t:'number',ph:'10'},{k:'status',l:'狀態',t:'select',opts:[['ok','已確認'],['wait','待確認'],['spare','預備桌']]},{k:'guests',l:'賓客名單（一行一位，或用逗號分隔）',t:'textarea',rows:6},{k:'note',l:'備註',t:'textarea',rows:2,ph:'例：需兒童椅、素食 2 位'}],
+    flow:[{k:'time',l:'時間',t:'time'},{k:'name',l:'儀式名稱',req:1},{k:'content',l:'儀式內容',t:'textarea',rows:3},{k:'people',l:'當下的人事物',t:'textarea',rows:2,ph:'例：新人、主持人、進場音樂'},{k:'staffIds',l:'負責工作人員',t:'multi',opts:S.staff.map(s=>[s.id,staffLabel(s)])}],
+    expenses:[{k:'item',l:'項目',req:1,ph:'例：婚宴場地'},{k:'vendor',l:'廠商'},{k:'deposit',l:'訂金金額',t:'number'},{k:'depPaid',t:'check',txt:'訂金已付'},{k:'balance',l:'尾款金額',t:'number'},{k:'balPaid',t:'check',txt:'尾款已付'},{k:'total',l:'總額（留空＝訂金＋尾款）',t:'number'},{k:'payer',l:'付款人',list:[...new Set(S.expenses.map(e=>e.payer).filter(Boolean).concat(['新郎','新娘','男方家','女方家']))]},{k:'note',l:'備註',t:'textarea',rows:2}]
+  }[l];
+}
+const DEF={schedule:()=>({date:selDay||dstr(new Date())}),tasks:()=>({}),props:()=>({}),staff:()=>({}),tables:()=>({side:'男方',cap:10,status:'wait',no:String(S.tables.length)}),flow:()=>({}),expenses:()=>({})};
+function edit(l,id){const o=id?byId(l,id):DEF[l]();openForm(NAMES[l]+(id?'｜編輯':'｜新增'),fieldsFor(l),o,d=>upsert(l,id,d),l)}
+function openSettings(){
+  openForm('基本設定',[{k:'title',l:'頂部標題',req:1},{k:'couple',l:'新人'},{k:'date',l:'婚禮日期',t:'date',req:1},{k:'time',l:'迎賓時間',t:'time'},{k:'venue',l:'地點'}],S,d=>Object.assign(S,d));
+}
+
+/* ---------- views ---------- */
+const VIEWS={};
+VIEWS.home=()=>{
+  const n=daysLeft();let top='';
+  const cf=currentFlow();
+  if(cf&&(cf.cur||cf.next))top=`<div class="card now-card" onclick="go('flow')"><div class="mute" style="font-size:12.5px">婚禮當天・即時流程</div>${cf.cur?`<div><b>進行中：</b>${esc(cf.cur.time)} ${esc(cf.cur.name)}</div>`:''}${cf.next?`<div class="mute">下一個：${esc(cf.next.time)} ${esc(cf.next.name)}</div>`:''}</div>`;
+  const seg=`<div class="seg"><button class="${S.homeMode=='cd'?'on':''}" onclick="S.homeMode='cd';save();render()">⏳ 倒數</button><button class="${S.homeMode=='cal'?'on':''}" onclick="S.homeMode='cal';save();render()">📅 月曆</button></div>`;
+  const cd=`<div class="card cd"><span class="stamp">囍</span>${n>0?`<div class="mute" style="margin-top:12px">距離婚禮還有</div><div class="n">${n}</div><div class="mute">天</div>`:n==0?`<div class="n" style="font-size:44px;margin-top:14px">就是今天！</div>`:`<div class="mute" style="margin-top:12px">已結婚</div><div class="n">${-n}</div><div class="mute">天</div>`}<div style="margin-top:12px;font-size:14px">${esc(fmtD(S.date))} ${esc(S.time||'')}・${esc(S.venue||'')}</div></div>`;
+  const tasksDone=S.tasks.filter(t=>t.done).length,propsDone=S.props.filter(p=>p.done).length;
+  const tb=S.tables.filter(t=>t.status!='spare'),tok=tb.filter(t=>t.status=='ok').length;
+  const total=S.expenses.reduce((a,e)=>a+totalOf(e),0);
+  return top+seg+(S.homeMode=='cal'?calHTML():cd)+
+  `<div class="card"><div class="row" style="margin-bottom:6px"><b class="grow">🔍 找座位</b><span class="mute" style="font-size:12px">輸入賓客姓名</span></div><input class="search" id="seatq" placeholder="例：王小明" oninput="seatSearch(this.value,'seatres')" enterkeyhint="search"><div class="res" id="seatres"></div></div>
+  <div class="stats">
+   <div class="stat" onclick="go('tasks')"><b>${tasksDone} / ${S.tasks.length}</b><span>籌備項目完成</span></div>
+   <div class="stat" onclick="go('props')"><b>${propsDone} / ${S.props.length}</b><span>道具已備妥</span></div>
+   <div class="stat" onclick="go('tables')"><b>${tok} / ${tb.length}</b><span>桌數已確認</span></div>
+   <div class="stat" onclick="go('money')"><b>${money(total)}</b><span>總支出</span></div>
+  </div>`;
+};
+function calHTML(){
+  const first=new Date(calY,calM,1).getDay(),n=new Date(calY,calM+1,0).getDate(),today=dstr(new Date());
+  const has={};S.schedule.forEach(s=>{if(s.date)has[s.date]=(has[s.date]||0)+1});
+  let c=[...WD].map(w=>`<div class="wd">${w}</div>`).join('');
+  for(let i=0;i<first;i++)c+='<div></div>';
+  for(let d=1;d<=n;d++){const ds=`${calY}-${pad(calM+1)}-${pad(d)}`;
+    c+=`<button class="day ${ds==today?'today':''} ${ds==S.date?'wed':''} ${ds==selDay?'sel':''}" onclick="selDay=selDay=='${ds}'?'':'${ds}';render()">${d}${has[ds]?'<i></i>':''}</button>`}
+  const items=selDay?S.schedule.filter(s=>s.date==selDay):S.schedule.filter(s=>s.date&&s.date.startsWith(`${calY}-${pad(calM+1)}`)).sort((a,b)=>a.date.localeCompare(b.date));
+  return `<div class="card"><div class="calh"><button class="ic" onclick="calMove(-1)">‹</button><b class="serif">${calY} 年 ${calM+1} 月</b><button class="ic" onclick="calMove(1)">›</button></div><div class="cal">${c}</div>
+  <div style="margin-top:10px;border-top:1px dashed var(--line);padding-top:8px"><div class="row"><span class="grow mute" style="font-size:12.5px">${selDay?fmtD(selDay)+' 的日程':'本月日程'}</span><button class="btn sm ghost" onclick="edit('schedule')">＋ 新增</button></div>
+  ${items.length?items.map(s=>`<div class="row ${s.done?'done':''}" style="padding:5px 0"><span class="chip">${esc(fmtD(s.date))}</span><span class="grow t">${esc(s.title)}</span></div>`).join(''):'<div class="mute" style="font-size:13px;padding:6px 0">沒有安排</div>'}
+  <div style="text-align:center;margin-top:6px"><button class="btn sm ghost" onclick="const d=new Date(S.date+'T00:00');calY=d.getFullYear();calM=d.getMonth();render()">跳到婚禮當月</button></div></div></div>`;
+}
+function calMove(k){calM+=k;if(calM<0){calM=11;calY--}if(calM>11){calM=0;calY++}selDay='';render()}
+function seatSearch(q,target,noStore){
+  q=q.trim();if(!noStore&&target=='seatres2')seatQ=q;
+  const box=document.getElementById(target);if(!box)return;
+  document.querySelectorAll('.tbl.hl').forEach(e=>e.classList.remove('hl'));
+  if(!q){box.innerHTML='';return}
+  const hits=[];S.tables.forEach(t=>splitNames(t.guests).forEach(g=>{if(g.includes(q))hits.push({g,t})}));
+  if(target=='seatres2')hits.forEach(h=>{const el=document.querySelector(`.tbl[data-id="${h.t.id}"]`);if(el)el.classList.add('hl')});
+  box.innerHTML=hits.length?hits.slice(0,30).map(h=>`<div class="hit"><span>${esc(h.g)}</span><span><b>${/桌/.test(h.t.no)?esc(h.t.no):'第 '+esc(h.t.no)+' 桌'}</b> <span class="mute">${esc(h.t.name||'')}</span></span></div>`).join(''):'<div class="mute" style="font-size:13px;padding:6px 2px">找不到這位賓客</div>';
+}
+
+VIEWS.flow=()=>{
+  const cf=currentFlow();const curId=cf&&cf.cur?cf.cur.id:'';
+  return `<div class="bar"><h2>宴客流程</h2><button class="btn sm ghost" onclick="sortFlow()">依時間排</button><button class="btn sm" onclick="edit('flow')">＋ 新增</button></div><p class="hint">按住左側 ≡ 可拖曳排序；點 ✎ 編輯</p>
+  <div id="flowlist">${S.flow.map(f=>{
+    const st=(f.staffIds||[]).map(id=>byId('staff',id)).filter(Boolean),pp=S.props.filter(p=>p.flowId==f.id);
+    return `<div class="card tl drag-item ${curId==f.id?'now':''}" data-id="${f.id}"><span class="handle">≡</span><div class="tl-time">${esc(f.time||'--:--')}</div><div class="tl-body"><b>${esc(f.name)}</b>${f.content?`<p>${esc(f.content)}</p>`:''}${f.people?`<p class="mute">👥 ${esc(f.people)}</p>`:''}${st.length||pp.length?`<div class="chips">${st.map(s=>chip('👤 '+staffLabel(s))).join('')}${pp.map(p=>chip('🎒 '+p.name,p.done?'ok':'warn')).join('')}</div>`:''}</div><button class="ic" onclick="edit('flow','${f.id}')">✎</button></div>`}).join('')}</div>${S.flow.length?'':'<div class="empty">還沒有流程，點「＋ 新增」開始</div>'}`;
+};
+function sortFlow(){S.flow.sort((a,b)=>(a.time||'99').localeCompare(b.time||'99'));save();render();toast('已依時間排序')}
+function enableDrag(box,done){
+  if(!box)return;
+  box.querySelectorAll('.handle').forEach(h=>h.addEventListener('pointerdown',e=>{
+    const item=h.closest('.drag-item');e.preventDefault();
+    item.classList.add('dragging');
+    const mv=ev=>{
+      const y=ev.clientY;let after=null;
+      for(const s of box.querySelectorAll('.drag-item:not(.dragging)')){const r=s.getBoundingClientRect();if(y<r.top+r.height/2){after=s;break}}
+      if(after){if(after!==item.nextSibling)box.insertBefore(item,after)}else if(box.lastElementChild!==item)box.appendChild(item);
+      if(y<70)window.scrollBy(0,-12);else if(y>innerHeight-70)window.scrollBy(0,12);
+    };
+    const up=()=>{item.classList.remove('dragging');document.removeEventListener('pointermove',mv);document.removeEventListener('pointerup',up);document.removeEventListener('pointercancel',up);done([...box.querySelectorAll('.drag-item')].map(x=>x.dataset.id))};
+    document.addEventListener('pointermove',mv);document.addEventListener('pointerup',up);document.addEventListener('pointercancel',up);
+  }));
+}
+
+VIEWS.tables=()=>{
+  const ST={ok:['已確認','ok'],wait:['待確認','warn'],spare:['預備桌','gray']};
+  const main=S.tables.filter(t=>t.status!='spare');
+  const ppl=S.tables.reduce((a,t)=>a+splitNames(t.guests).length,0);
+  const list=[...S.tables].sort((a,b)=>(b.no=='主桌')-(a.no=='主桌')||String(a.no).localeCompare(String(b.no),'zh-Hant',{numeric:true}));
+  const side=s=>S.tables.filter(t=>t.status!='spare'&&t.side==s).length;
+  return `<div class="bar"><h2>確認桌數・座位</h2><button class="btn sm" onclick="edit('tables')">＋ 新增桌</button></div>
+  <div class="sum"><div><b>${main.length}</b><span>正式桌數</span></div><div><b style="color:var(--ok)">${main.filter(t=>t.status=='ok').length}</b><span>已確認</span></div><div><b style="color:var(--warn)">${main.filter(t=>t.status=='wait').length}</b><span>待確認</span></div><div><b>${S.tables.length-main.length}</b><span>預備桌</span></div></div>
+  <p class="hint">男方 ${side('男方')} 桌・女方 ${side('女方')} 桌・共同 ${side('共同')} 桌・名單共 ${ppl} 人</p>
+  <input class="search" id="seatq2" placeholder="🔍 輸入賓客姓名查桌號" oninput="seatSearch(this.value,'seatres2')"><div class="res" id="seatres2" style="margin-bottom:10px"></div>
+  ${list.map(t=>{const g=splitNames(t.guests),s=ST[t.status]||ST.wait;
+   return `<div class="card tbl" data-id="${t.id}"><div class="row"><span class="tno grow">${/桌/.test(t.no)?esc(t.no):'第 '+esc(t.no)+' 桌'} <span class="mute" style="font:400 13px 'Noto Sans TC'">${esc(t.name||'')}</span></span><button class="ic" onclick="edit('tables','${t.id}')">✎</button></div>
+   <div class="chips" style="margin-top:2px">${chip(t.side||'—','gray')}<span class="chip ${s[1]}" style="cursor:pointer" onclick="cycleTable('${t.id}')">${s[0]} ⇄</span>${chip(g.length+' / '+(t.cap||10)+' 人',g.length>(t.cap||10)?'shu':'')}</div>
+   ${g.length?`<div class="chips">${g.map(x=>`<span class="guest${seatQ&&x.includes(seatQ)?' m':''}">${esc(x)}</span>`).join('')}</div>`:''}${t.note?`<div class="mute" style="font-size:13px;margin-top:6px">📝 ${esc(t.note)}</div>`:''}</div>`}).join('')}
+  ${S.tables.length?'':'<div class="empty">還沒有桌次</div>'}`;
+};
+function cycleTable(id){const t=byId('tables',id);t.status={ok:'wait',wait:'spare',spare:'ok'}[t.status]||'ok';save();render()}
+
+VIEWS.staff=()=>`<div class="bar"><h2>工作人員名單</h2><button class="btn sm" onclick="edit('staff')">＋ 新增</button></div><p class="hint">每人卡片會自動列出負責的流程環節與道具</p>
+ ${S.staff.map(s=>{const fl=S.flow.filter(f=>(f.staffIds||[]).includes(s.id)),pp=S.props.filter(p=>p.staffId==s.id);
+  return `<div class="card"><div class="row"><div class="grow"><b>${esc(s.role)}</b>　<span>${esc(s.name||'')}</span>${s.phone?`<div><a href="tel:${esc(s.phone)}" style="color:var(--ai)">📞 ${esc(s.phone)}</a></div>`:''}</div><button class="ic" onclick="edit('staff','${s.id}')">✎</button></div>
+  ${s.note?`<div style="font-size:13.5px;margin-top:4px">${esc(s.note)}</div>`:''}
+  ${fl.length?`<div class="chips">${fl.map(f=>chip('⏱ '+(f.time||'')+' '+f.name)).join('')}</div>`:''}
+  ${pp.length?`<div class="chips">${pp.map(p=>chip('🎒 '+p.name+(p.qty?' ×'+p.qty:''),p.done?'ok':'warn')).join('')}</div>`:''}</div>`}).join('')}
+ ${S.staff.length?'':'<div class="empty">還沒有工作人員</div>'}`;
+
+VIEWS.props=()=>{
+  const list=S.props.filter(p=>!propFilter||p.staffId==propFilter);
+  const d=S.props.filter(p=>p.done).length;
+  return `<div class="bar"><h2>道具清單</h2><button class="btn sm" onclick="edit('props')">＋ 新增</button></div>
+  <p class="hint">已備妥 ${d} / ${S.props.length}；黃色＝還沒準備</p>
+  <div class="fld"><select onchange="propFilter=this.value;render()" style="width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;background:#fff"><option value="">全部工作人員</option>${S.staff.map(s=>`<option value="${s.id}" ${propFilter==s.id?'selected':''}>只看：${esc(staffLabel(s))}</option>`).join('')}</select></div>
+  ${list.map(p=>{const f=byId('flow',p.flowId),s=byId('staff',p.staffId);
+   return `<div class="card ${p.done?'done':''}"><div class="row"><input type="checkbox" ${p.done?'checked':''} onchange="tog('props','${p.id}','done')"><div class="grow"><span class="t"><b>${esc(p.name)}</b>${p.qty?` <span class="mute">×${esc(p.qty)}</span>`:''}</span>${f||s?`<div class="chips">${f?chip('⏱ '+(f.time||'')+' '+f.name):''}${s?chip('👤 '+staffLabel(s)):''}</div>`:''}${p.note?`<div class="mute" style="font-size:13px;margin-top:4px">${esc(p.note)}</div>`:''}</div><button class="ic" onclick="edit('props','${p.id}')">✎</button><button class="ic" onclick="del('props','${p.id}')">🗑</button></div></div>`}).join('')}
+  ${list.length?'':'<div class="empty">沒有道具</div>'}`;
+};
+
+function totalOf(e){return num(e.total)>0?num(e.total):num(e.deposit)+num(e.balance)}
+function paidOf(e){return (e.depPaid?num(e.deposit):0)+(e.balPaid?num(e.balance):0)}
+VIEWS.money=()=>{
+  const E=S.expenses,tot=E.reduce((a,e)=>a+totalOf(e),0),paid=E.reduce((a,e)=>a+paidOf(e),0);
+  const seg=`<div class="seg"><button class="${S.moneyMode!='sum'?'on':''}" onclick="S.moneyMode='list';save();render()">📋 明細</button><button class="${S.moneyMode=='sum'?'on':''}" onclick="S.moneyMode='sum';save();render()">💰 總支出</button></div>`;
+  if(S.moneyMode=='sum'){
+    const by={};E.forEach(e=>{const k=e.payer||'未填付款人';by[k]=by[k]||{t:0,p:0};by[k].t+=totalOf(e);by[k].p+=paidOf(e)});
+    const items=[...E].sort((a,b)=>totalOf(b)-totalOf(a));
+    return `<div class="bar"><h2>記帳</h2></div>${seg}<div class="card big"><span class="mute">婚禮總支出</span><b>${money(tot)}</b><div class="pbar"><i style="width:${tot?Math.min(100,paid/tot*100):0}%"></i></div><span class="mute" style="font-size:13px">已付 ${tot?Math.round(paid/tot*100):0}%</span></div>
+    <div class="grid3"><div><b style="color:var(--ok)">${money(paid)}</b><span>已付</span></div><div><b style="color:var(--shu)">${money(tot-paid)}</b><span>未付</span></div><div><b>${E.length}</b><span>筆數</span></div></div>
+    <div class="card"><h3 class="serif" style="margin:0 0 6px;font-size:15px">依付款人</h3><table class="t"><tr><th>付款人</th><th>總額</th><th>已付</th><th>未付</th></tr>${Object.entries(by).map(([k,v])=>`<tr><td>${esc(k)}</td><td>${money(v.t)}</td><td>${money(v.p)}</td><td style="color:var(--shu)">${money(v.t-v.p)}</td></tr>`).join('')||'<tr><td colspan=4 class="mute">尚無資料</td></tr>'}</table></div>
+    <div class="card"><h3 class="serif" style="margin:0 0 6px;font-size:15px">各項金流</h3>${items.map(e=>`<div class="mrow"><span>${esc(e.item)}</span><span>${money(totalOf(e))}</span></div><div class="pbar"><i style="width:${tot?totalOf(e)/tot*100:0}%"></i></div>`).join('')||'<div class="mute">尚無資料</div>'}</div>`;
+  }
+  return `<div class="bar"><h2>記帳</h2><button class="btn sm" onclick="edit('expenses')">＋ 記一筆</button></div>${seg}
+  <p class="hint">總計 ${money(tot)}・已付 ${money(paid)}・未付 ${money(tot-paid)}</p>
+  ${E.map(e=>{const t=totalOf(e),gap=t-num(e.deposit)-num(e.balance);
+   return `<div class="card"><div class="row"><div class="grow"><b>${esc(e.item)}</b> ${e.vendor?`<span class="mute">｜${esc(e.vendor)}</span>`:''}</div><b class="serif" style="color:var(--shu)">${money(t)}</b><button class="ic" onclick="edit('expenses','${e.id}')">✎</button></div>
+   <div class="mrow"><span>訂金 ${money(e.deposit)}</span><span class="chip ${e.depPaid?'ok':'warn'}" style="cursor:pointer" onclick="tog('expenses','${e.id}','depPaid')">${e.depPaid?'已付':'未付'}</span></div>
+   <div class="mrow"><span>尾款 ${money(e.balance)}</span><span class="chip ${e.balPaid?'ok':'warn'}" style="cursor:pointer" onclick="tog('expenses','${e.id}','balPaid')">${e.balPaid?'已付':'未付'}</span></div>
+   ${gap>0?`<div class="mute" style="font-size:12.5px">另有 ${money(gap)} 尚未排入訂金／尾款</div>`:''}
+   <div class="chips">${chip('付款人：'+(e.payer||'未填'),'gray')}</div>${e.note?`<div class="mute" style="font-size:13px;margin-top:4px">${esc(e.note)}</div>`:''}</div>`}).join('')}
+  ${E.length?'':'<div class="empty">還沒有支出紀錄，點「＋ 記一筆」</div>'}`;
+};
+
+VIEWS.schedule=()=>{
+  const today=dstr(new Date());const L=[...S.schedule].sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+  const up=L.filter(s=>!s.date||s.date>=today),past=L.filter(s=>s.date&&s.date<today);
+  const row=s=>`<div class="card ${s.done?'done':''}" style="padding:10px 12px"><div class="row"><input type="checkbox" ${s.done?'checked':''} onchange="tog('schedule','${s.id}','done')"><span class="chip ${s.date==S.date?'shu':''}">${esc(fmtD(s.date))}</span><div class="grow"><div class="t">${esc(s.title)}</div>${s.note?`<div class="mute" style="font-size:12.5px">${esc(s.note)}</div>`:''}</div><button class="ic" onclick="edit('schedule','${s.id}')">✎</button><button class="ic" onclick="del('schedule','${s.id}')">🗑</button></div></div>`;
+  return `<div class="bar"><h2>日期排定表</h2><button class="btn sm" onclick="edit('schedule')">＋ 新增</button></div><p class="hint">新增的日期會自動在首頁月曆顯示圓點</p>
+  ${up.length?'<div class="gh">即將到來</div>'+up.map(row).join(''):''}${past.length?'<div class="gh">已過日期</div>'+past.map(row).join(''):''}${L.length?'':'<div class="empty">還沒有日程</div>'}`;
+};
+
+VIEWS.tasks=()=>{
+  const d=S.tasks.filter(t=>t.done).length;const g={};S.tasks.forEach(t=>{(g[t.cat||'其他']=g[t.cat||'其他']||[]).push(t)});
+  return `<div class="center" style="margin:6px 0 2px"><h2>籌備項目</h2><div class="mute" style="font-size:13px">已完成 ${d} / ${S.tasks.length}</div></div><div style="text-align:right;margin-bottom:6px"><button class="btn sm" onclick="edit('tasks')">＋ 新增</button></div>
+  ${Object.entries(g).map(([k,v])=>`<div class="gh">${esc(k)}</div>`+v.map(t=>`<div class="card ${t.done?'done':''}" style="padding:10px 12px"><div class="row"><input type="checkbox" ${t.done?'checked':''} onchange="tog('tasks','${t.id}','done')"><div class="grow"><span class="t">${esc(t.title)}</span>${t.owner?` <span class="mute" style="font-size:12.5px">・${esc(t.owner)}</span>`:''}</div><button class="ic" onclick="edit('tasks','${t.id}')">✎</button><button class="ic" onclick="del('tasks','${t.id}')">🗑</button></div></div>`).join('')).join('')}
+  ${S.tasks.length?'':'<div class="empty">還沒有籌備項目</div>'}`;
+};
+
+/* ---------- sync ---------- */
+const exportText=()=>JSON.stringify(S);
+const stamp=()=>{const d=new Date();return `${d.getMonth()+1}${pad(d.getDate())}-${pad(d.getHours())}${pad(d.getMinutes())}`};
+VIEWS.sync=()=>`<h2 class="center" style="margin:6px 0 4px">資料同步</h2><p class="hint center">最後更新：${new Date(S.updatedAt||Date.now()).toLocaleString('zh-TW',{hour12:false})}</p>
+ <div class="card sec"><h3>① 導出（傳給工作人員）</h3><p class="mute" style="font-size:13px;margin:0 0 8px">建議用「複製資料」貼到 LINE；下載沒反應時也用這個。</p>
+  <div class="btns"><button class="btn" onclick="copyOut()">📋 複製資料</button><button class="btn ghost" onclick="shareOut()">📤 分享</button><button class="btn ghost" onclick="dlOut()">⬇️ 下載檔案</button></div>
+  <details><summary>都沒反應？展開手動全選複製</summary><textarea class="code" id="exptxt" rows="5" readonly onfocus="this.select()">${esc(exportText())}</textarea></details></div>
+ <div class="card sec" style="border-color:var(--ai)"><h3>☁️ 線上資料（GitHub）</h3><p class="mute" style="font-size:13px;margin:0 0 8px">工作人員打開網址時，會自動載入 GitHub 上的 data.json。你改完資料後，按下面按鈕產生 data.json，再上傳到 GitHub 取代舊檔即可。</p>
+  <div class="btns"><button class="btn" onclick="publishOut()">⬆️ 產生 data.json</button><button class="btn ghost" onclick="pullRemote(true)">🔄 重新取得線上資料</button></div>
+  <p class="mute" style="font-size:12px;margin:8px 0 0">線上資料版本：${S._remoteAt?new Date(S._remoteAt).toLocaleString('zh-TW',{hour12:false}):'尚未載入'}</p></div>
+ <div class="card sec" style="border-color:var(--shu)"><h3>📱 離線版（當天沒網路也能用）</h3><p class="mute" style="font-size:13px;margin:0 0 8px">產生一個<b>已含目前資料</b>的 HTML 檔，傳到 LINE 給工作人員，打開即可使用，不需網路、不用匯入。資料更新後請重新產生一次。</p>
+  <div class="btns"><button class="btn shu" onclick="offlineOut()">📱 下載／分享離線版</button><button class="btn ghost" onclick="printSheet()">📄 當天速查表（存 PDF）</button></div>
+  <p class="mute" style="font-size:12px;margin:8px 0 0">iPhone 不一定能直接執行 HTML，請改用「當天速查表」存成 PDF。</p></div>
+ <div class="card sec"><h3>② 導入（收到別人的資料）</h3><p class="mute" style="font-size:13px;margin:0 0 8px">把收到的整段文字貼進來，會<b>取代</b>這台裝置上的資料。</p>
+  <textarea class="code" id="imptxt" rows="5" placeholder="在這裡貼上資料…"></textarea>
+  <div class="btns" style="margin-top:8px"><button class="btn shu" onclick="importText($('#imptxt').value)">匯入</button><label class="btn ghost" style="cursor:pointer">📁 選擇檔案<input type="file" accept=".json,.txt,application/json,text/plain" style="display:none" onchange="importFile(this)"></label></div></div>
+ <div class="card sec"><h3>③ 其他</h3><div class="btns"><button class="btn ghost" onclick="openSettings()">⚙️ 標題與婚禮資訊</button><button class="btn ghost danger" onclick="askConfirm('清空所有清單（保留標題與婚禮資訊）？建議先導出備份。',()=>{['schedule','tasks','props','staff','tables','flow','expenses'].forEach(k=>S[k]=[]);save();render();toast('已清空')})">🧹 清空範例資料</button></div></div>`;
+async function copyOut(){
+  const t=exportText();
+  try{await navigator.clipboard.writeText(t);toast('已複製，可貼到 LINE 傳給工作人員');return}catch(e){}
+  try{const ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();ta.setSelectionRange(0,t.length);const ok=document.execCommand('copy');ta.remove();if(ok){toast('已複製');return}}catch(e){}
+  const d=document.querySelector('details');if(d)d.open=true;const x=$('#exptxt');if(x){x.focus();x.select()}toast('請長按文字框 → 全選 → 拷貝');
+}
+async function shareOut(){
+  try{await navigator.share({title:'婚禮助手資料',text:exportText()});}catch(e){if(e&&e.name=='AbortError')return;copyOut()}
+}
+function dlOut(){
+  try{const b=new Blob([exportText()],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=`婚禮助手資料_${stamp()}.json`;document.body.appendChild(a);a.click();a.remove();toast('若沒有下載，請改用「複製資料」')}catch(e){copyOut()}
+}
+function importText(t){
+  t=String(t||'');const a=t.indexOf('{'),b=t.lastIndexOf('}');
+  let d;try{d=JSON.parse(t.slice(a,b+1))}catch(e){toast('資料格式不對，請確認有完整貼上');return}
+  if(!d||!Array.isArray(d.flow)||!Array.isArray(d.tables)){toast('這不是婚禮助手的資料');return}
+  askConfirm(`匯入這份資料（更新於 ${new Date(d.updatedAt||0).toLocaleString('zh-TW',{hour12:false})}）並取代目前資料？`,()=>{
+    const base=seed();S=Object.assign(base,d);['schedule','tasks','props','staff','tables','flow','expenses'].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[]});
+    try{localStorage.setItem(KEY,JSON.stringify(S));canStore=true}catch(e){canStore=false}
+    render();toast('匯入完成');
+  });
+}
+function offlineHTML(){
+  const d=document.documentElement.cloneNode(true);
+  [['#view','innerHTML',''],['#nav','innerHTML',''],['#ttl','innerHTML',''],['#sub','textContent',''],['#modal','innerHTML',''],['#print','innerHTML','']].forEach(([q,k,v])=>{const e=d.querySelector(q);if(e)e[k]=v});
+  ['#mask','#toast'].forEach(q=>{const e=d.querySelector(q);if(e)e.className=''});
+  d.querySelector('#embed-data').textContent='window.EMBED='+JSON.stringify(S).replace(/</g,'\\u003c')+';';
+  return '<!DOCTYPE html>\n'+d.outerHTML;
+}
+async function offlineOut(){
+  const name=`婚禮助手_離線版_${stamp()}.html`;const blob=new Blob([offlineHTML()],{type:'text/html'});
+  try{const f=new File([blob],name,{type:'text/html'});if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:name});return}}catch(e){if(e&&e.name=='AbortError')return}
+  try{const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();toast('已下載離線版，請傳給工作人員')}catch(e){toast('無法下載，請直接用手機開啟原始 HTML 檔再按一次')}
+}
+function printSheet(){
+  const T=(h,rows)=>`<table><tr>${h.map(x=>`<th>${x}</th>`).join('')}</tr>${rows.join('')}</table>`;
+  const tr=a=>`<tr>${a.map(x=>`<td>${x}</td>`).join('')}</tr>`;
+  const tl=[...S.tables].sort((a,b)=>(b.no=='主桌')-(a.no=='主桌')||String(a.no).localeCompare(String(b.no),'zh-Hant',{numeric:true}));
+  const guests=[];tl.forEach(t=>splitNames(t.guests).forEach(g=>guests.push([g,t])));guests.sort((a,b)=>a[0].localeCompare(b[0],'zh-Hant'));
+  $('#print').innerHTML=`<h1>${esc(S.title)}・當天速查表</h1><div>${esc(S.couple)}｜${esc(S.date)} ${esc(S.time||'')}｜${esc(S.venue||'')}｜資料更新 ${new Date(S.updatedAt).toLocaleString('zh-TW',{hour12:false})}</div>
+  <h2>宴客流程</h2>${T(['時間','環節','內容','人事物／負責','道具'],S.flow.map(f=>tr([esc(f.time),'<b>'+esc(f.name)+'</b>',esc(f.content),esc(f.people)+'<br>'+(f.staffIds||[]).map(id=>esc(staffLabel(byId('staff',id)))).join('、'),S.props.filter(p=>p.flowId==f.id).map(p=>esc(p.name)).join('、')])))}
+  <h2>工作人員</h2>${T(['負責事項','姓名','電話','說明'],S.staff.map(s=>tr([esc(s.role),esc(s.name),esc(s.phone),esc(s.note)])))}
+  <h2>道具</h2>${T(['道具','數量','環節','負責'],S.props.map(p=>{const f=byId('flow',p.flowId),s=byId('staff',p.staffId);return tr([esc(p.name),esc(p.qty),f?esc((f.time||'')+' '+f.name):'',s?esc(staffLabel(s)):''])}))}
+  <h2 class="pb">桌次與賓客</h2>${T(['桌號','桌名','所屬','人數','賓客'],tl.map(t=>{const g=splitNames(t.guests);return tr(['<b>'+esc(t.no)+'</b>',esc(t.name),esc(t.side),g.length+'/'+(t.cap||10),esc(g.join('、'))+(t.note?'<br>📝'+esc(t.note):'')])}))}
+  ${guests.length?`<h2 class="pb">賓客姓名 → 桌號（依姓名排序）</h2>${T(['姓名','桌號','桌名'],guests.map(([g,t])=>tr([esc(g),'<b>'+esc(t.no)+'</b>',esc(t.name)])))}`:''}`;
+  try{window.print()}catch(e){toast('無法列印，請用手機直接開啟 HTML 檔再試')}
+}
+/* ---------- GitHub data.json ---------- */
+const DATA_URL='data.json';
+const enc=new TextEncoder(),dec=new TextDecoder();
+const toB64=u=>{let s='';for(let i=0;i<u.length;i+=8192)s+=String.fromCharCode.apply(null,u.subarray(i,i+8192));return btoa(s)};
+const fromB64=b=>Uint8Array.from(atob(b),c=>c.charCodeAt(0));
+async function deriveKey(pw,salt){const base=await crypto.subtle.importKey('raw',enc.encode(pw),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt,iterations:150000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt'])}
+async function encryptObj(o,pw){const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));const ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},await deriveKey(pw,salt),enc.encode(JSON.stringify(o))));return {enc:1,updatedAt:o.updatedAt,salt:toB64(salt),iv:toB64(iv),data:toB64(ct)}}
+async function decryptObj(d,pw){const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:fromB64(d.iv)},await deriveKey(pw,fromB64(d.salt)),fromB64(d.data));return JSON.parse(dec.decode(pt))}
+const getPw=()=>{try{return localStorage.getItem(KEY+'-pw')||''}catch(e){return ''}};
+const setPw=p=>{try{localStorage.setItem(KEY+'-pw',p)}catch(e){}};
+function askPassword(d){return new Promise(res=>{
+  openModal(`<h3>🔒 請輸入資料密碼</h3><p class="mute" style="font-size:13px">密碼請向新人索取，輸入一次後這支手機會記住。</p><div class="fld"><input id="pwin" type="password" autocomplete="current-password" style="width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;font-size:16px"></div><div class="mbtns"><span style="flex:1"></span><button class="btn ghost" id="pwno">稍後</button><button class="btn" id="pwok">確定</button></div>`);
+  $('#pwno').onclick=()=>{closeModal();res(null)};
+  $('#pwok').onclick=async()=>{const pw=$('#pwin').value;try{const o=await decryptObj(d,pw);setPw(pw);closeModal();res(o)}catch(e){toast('密碼不正確')}};
+})}
+async function pullRemote(manual){
+  if(!/^https?:/.test(location.protocol)){if(manual)toast('請用 GitHub 網址開啟');return}
+  let d;
+  try{const r=await fetch(DATA_URL+'?t='+Date.now(),{cache:'no-store'});if(!r.ok)throw 0;d=await r.json()}
+  catch(e){if(manual)toast(navigator.onLine?'找不到線上 data.json':'目前離線，顯示手機裡的資料');return}
+  const rv=d.updatedAt||0;
+  if(!manual&&rv<=(S._remoteAt||0))return;
+  if(d.enc){let o=null;const pw=getPw();if(pw){try{o=await decryptObj(d,pw)}catch(e){}}if(!o)o=await askPassword(d);if(!o)return;d=o}
+  if(!Array.isArray(d.flow)){if(manual)toast('線上資料格式不對');return}
+  S=Object.assign(seed(),d);S._remoteAt=rv;
+  ['schedule','tasks','props','staff','tables','flow','expenses'].forEach(k=>{if(!Array.isArray(S[k]))S[k]=[]});
+  try{localStorage.setItem(KEY,JSON.stringify(S));canStore=true}catch(e){canStore=false}
+  render();toast('已更新為最新資料（'+new Date(rv).toLocaleString('zh-TW',{hour12:false,month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+'）');
+}
+function publishOut(){
+  openModal(`<h3>⬆️ 產生 data.json</h3><p class="mute" style="font-size:13px">GitHub 免費版的網站是公開的。建議設定密碼，賓客名單和電話才不會被外人看到；工作人員第一次開啟時輸入一次即可。</p><div class="fld"><label>資料密碼（留空＝不加密）</label><input id="pubpw" type="text" value="${esc(getPw())}" style="width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;font-size:16px"></div><div class="mbtns"><span style="flex:1"></span><button class="btn ghost" onclick="closeModal()">取消</button><button class="btn" id="pubok">產生並下載</button></div>`);
+  $('#pubok').onclick=async()=>{
+    const pw=$('#pubpw').value.trim();save();const o=Object.assign({},S);delete o._remoteAt;
+    let out;try{out=pw?await encryptObj(o,pw):o}catch(e){toast('此環境無法加密，請用 GitHub 網址或 https 開啟');return}
+    if(pw)setPw(pw);S._remoteAt=S.updatedAt;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
+    closeModal();
+    try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(out)],{type:'application/json'}));a.download='data.json';document.body.appendChild(a);a.click();a.remove();toast('已下載 data.json，請上傳到 GitHub 取代舊檔')}catch(e){toast('下載失敗')}
+    render();
+  };
+}
+function importFile(inp){const f=inp.files&&inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>importText(r.result);r.readAsText(f);inp.value=''}
+
+render();
+pullRemote(false);
+if('serviceWorker' in navigator&&isSecureContext){try{navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}}
+addEventListener('online',()=>{render();pullRemote(false)});addEventListener('offline',render);
+setInterval(()=>{if(tab=='flow'||tab=='home'){if(S.date===dstr(new Date())&&!$('#mask').classList.contains('on')&&document.activeElement.tagName!='INPUT')render()}},60000);
+</script>
+</body>
+</html>
