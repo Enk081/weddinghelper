@@ -470,8 +470,8 @@ VIEWS.sync=()=>`<h2 class="center" style="margin:6px 0 4px">資料同步</h2><p 
  <div class="card sec"><h3>① 導出（傳給工作人員）</h3><p class="mute" style="font-size:13px;margin:0 0 8px">建議用「複製資料」貼到 LINE；下載沒反應時也用這個。</p>
   <div class="btns"><button class="btn" onclick="copyOut()">📋 複製資料</button><button class="btn ghost" onclick="shareOut()">📤 分享</button><button class="btn ghost" onclick="dlOut()">⬇️ 下載檔案</button></div>
   <details><summary>都沒反應？展開手動全選複製</summary><textarea class="code" id="exptxt" rows="5" readonly onfocus="this.select()">${esc(exportText())}</textarea></details></div>
- <div class="card sec" style="border-color:var(--ai)"><h3>☁️ 線上資料（GitHub）</h3><p class="mute" style="font-size:13px;margin:0 0 8px">工作人員打開網址時，會自動載入 GitHub 上的 data.json。你改完資料後，按下面按鈕產生 data.json，再上傳到 GitHub 取代舊檔即可。</p>
-  <div class="btns"><button class="btn" onclick="publishOut()">⬆️ 產生 data.json</button><button class="btn ghost" onclick="pullRemote(true)">🔄 重新取得線上資料</button></div>
+ <div class="card sec" style="border-color:var(--ai)"><h3>☁️ 線上資料（GitHub）</h3><p class="mute" style="font-size:13px;margin:0 0 8px">工作人員打開網址時，會自動載入 GitHub 上的 data.json。你改完資料後，按下面按鈕產生 data.json，接著會再給你 seats.json（賓客查座位頁用），兩個一起上傳到 GitHub 取代舊檔即可。</p>
+  <div class="btns"><button class="btn" onclick="publishOut()">⬆️ 產生 data.json</button><button class="btn ghost" onclick="seatsOut()">🪑 只產生 seats.json</button><button class="btn ghost" onclick="pullRemote(true)">🔄 重新取得線上資料</button></div>
   <p class="mute" style="font-size:12px;margin:8px 0 0">線上資料版本：${S._remoteAt?new Date(S._remoteAt).toLocaleString('zh-TW',{hour12:false}):'尚未載入'}</p></div>
  <div class="card sec" style="border-color:var(--shu)"><h3>📱 離線版（當天沒網路也能用）</h3><p class="mute" style="font-size:13px;margin:0 0 8px">產生一個<b>已含目前資料</b>的 HTML 檔，傳到 LINE 給工作人員，打開即可使用，不需網路、不用匯入。資料更新後請重新產生一次。</p>
   <div class="btns"><button class="btn shu" onclick="offlineOut()">📱 下載／分享離線版</button><button class="btn ghost" onclick="printSheet()">📄 當天速查表（存 PDF）</button><button class="btn ghost" onclick="printSeating()">🪑 列印座位表</button></div>
@@ -563,9 +563,23 @@ function publishOut(){
     let out;try{out=pw?await encryptObj(o,pw):o}catch(e){toast('此環境無法加密，請用 GitHub 網址或 https 開啟');return}
     if(pw)setPw(pw);S._remoteAt=S.updatedAt;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}
     closeModal();
-    try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(out)],{type:'application/json'}));a.download='data.json';document.body.appendChild(a);a.click();a.remove();toast('已下載 data.json，請上傳到 GitHub 取代舊檔')}catch(e){toast('下載失敗')}
+    try{dlJSON('data.json',out)}catch(e){toast('下載失敗');return}
     render();
+    openModal(`<h3>✅ data.json 已下載</h3><p class="mute" style="font-size:13px">接著下載 <b>seats.json</b>（賓客查座位頁用，只含「姓名→桌號」，不含電話與記帳）。兩個檔案一起上傳到 GitHub，取代舊檔。</p><div class="mbtns"><span style="flex:1"></span><button class="btn ghost" onclick="closeModal()">先不用</button><button class="btn" onclick="closeModal();seatsOut()">🪑 下載 seats.json</button></div>`);
   };
+}
+/* ---------- seats.json（給 seat.html 賓客查座位） ---------- */
+function dlJSON(name,obj){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(obj)],{type:'application/json'}));a.download=name;document.body.appendChild(a);a.click();a.remove()}
+function seatsData(){
+  const tno=no=>{const s=String(no||'').trim(),m=s.replace(/^第\s*/,'').replace(/\s*桌$/,'');return /^\d+$/.test(m)?m:s};
+  const guests=[];
+  S.tables.forEach(t=>splitNames(t.guests).forEach(g=>guests.push({name:g,table:tno(t.no),note:t.name||''})));
+  return {hall:S.venue||'',date:(S.date||'').replace(/-/g,'.'),updated:new Date(S.updatedAt||Date.now()).toLocaleString('zh-TW',{hour12:false,month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'}),guests};
+}
+function seatsOut(){
+  const d=seatsData();
+  if(!d.guests.length){toast('桌次裡還沒有賓客名單');return}
+  try{dlJSON('seats.json',d);toast(`已下載 seats.json（${d.guests.length} 位），請上傳到 GitHub`)}catch(e){toast('下載失敗')}
 }
 function printSeating(){
   const tl=[...S.tables].sort((a,b)=>(b.no=='主桌')-(a.no=='主桌')||String(a.no).localeCompare(String(b.no),'zh-Hant',{numeric:true}));
