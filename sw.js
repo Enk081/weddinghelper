@@ -1,5 +1,5 @@
 // 婚禮籌備助手：離線快取。改了 index.html 想強制大家更新時，把版本號 +1
-const C = 'wedding-helper-v2';
+const C = 'wedding-helper-v3';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', e => {
