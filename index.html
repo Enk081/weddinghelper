@@ -138,7 +138,32 @@ details summary{cursor:pointer;color:var(--ai);font-size:14px;margin:6px 0}
 @media print{body{background:#fff}header,nav,main,#mask,#toast{display:none!important}#print{display:block;font-size:12px;color:#000}
 #print h1{font:700 18px "Noto Serif TC",serif;margin:0 0 2px}#print h2{font-size:14px;margin:14px 0 4px;border-bottom:2px solid #000;padding-bottom:2px}
 #print table{width:100%;border-collapse:collapse}#print td,#print th{border:1px solid #999;padding:4px 6px;vertical-align:top;text-align:left}#print th{background:#eee}
-#print .pb{page-break-before:always}}
+#print .pb{page-break-before:always}
+#print.seat{--ai:#1f3a5f;--shu:#b8322a;font-family:"Noto Serif TC","Songti TC","PMingLiU","MingLiU",serif;font-size:11pt;color:#111}
+#print.seat .sec{break-before:page;page-break-before:always}#print.seat .sec:first-child{break-before:auto;page-break-before:auto}
+#print.seat .hd{border-top:2pt solid var(--ai);border-bottom:.6pt solid var(--shu);padding:6pt 0 5pt;margin-bottom:10pt;display:flex;justify-content:space-between;align-items:flex-end}
+#print.seat .hd h1{font-size:17pt;letter-spacing:.15em;margin:0}#print.seat .hd small{font-size:9pt;color:#444}
+#print.seat .kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:6pt;margin-bottom:10pt}
+#print.seat .kpi div{border:.6pt solid #555;padding:5pt;text-align:center}#print.seat .kpi b{display:block;font-size:20pt;line-height:1.1}#print.seat .kpi span{font-size:9pt}
+#print.seat table{width:100%;border-collapse:collapse;font-size:10.5pt}
+#print.seat th,#print.seat td{border:.5pt solid #666;padding:3.5pt 6pt;text-align:left}
+#print.seat th{background:#eef1f5;border-bottom:1pt solid var(--ai);font-weight:700}
+#print.seat td.n,#print.seat th.n{text-align:center}
+#print.seat tr.tot td{border-top:1.2pt solid var(--ai);font-weight:700}
+#print.seat .sign{margin-top:14pt;display:flex;gap:30pt;font-size:10.5pt}
+#print.seat .blk{border:.8pt solid #333;border-top:2pt solid var(--ai);padding:7pt 9pt 8pt;margin-bottom:9pt;break-inside:avoid;page-break-inside:avoid}
+#print.seat .bh{display:flex;align-items:baseline;gap:10pt;border-bottom:.5pt solid var(--shu);padding-bottom:4pt;margin-bottom:6pt}
+#print.seat .bh .no{font-size:24pt;font-weight:700;line-height:1;min-width:60pt}
+#print.seat .bh .nm{flex:1;font-size:11pt}#print.seat .bh .ct{font-size:10pt}
+#print.seat .gl{display:grid;grid-template-columns:repeat(3,1fr);gap:3pt 10pt;font-size:12pt}
+#print.seat .gl div{border-bottom:.4pt dotted #999;padding:2pt 0}
+#print.seat .box{display:inline-block;width:10pt;height:10pt;border:.8pt solid #222;margin-right:5pt;vertical-align:-1pt}
+#print.seat .ft{display:flex;gap:16pt;margin-top:7pt;font-size:10pt}#print.seat .ft span{flex:0 0 auto}#print.seat .ft i{flex:1;border-bottom:.6pt solid #333;font-style:normal}
+#print.seat .idx{columns:3;column-gap:14pt;column-rule:.4pt solid #bbb;font-size:11pt}
+#print.seat .idx .g{break-after:avoid;font-weight:700;color:var(--shu);border-bottom:.6pt solid var(--shu);margin:6pt 0 2pt;font-size:10pt}
+#print.seat .idx .r{display:flex;break-inside:avoid;padding:1.5pt 0;border-bottom:.3pt dotted #bbb}#print.seat .idx .r span{flex:1}#print.seat .idx .r b{min-width:34pt;text-align:right}
+#print.seat .note{font-size:9pt;color:#444;margin:0 0 6pt}
+@page{size:A4;margin:12mm 12mm 14mm}}
 </style>
 </head>
 <body>
@@ -449,7 +474,7 @@ VIEWS.sync=()=>`<h2 class="center" style="margin:6px 0 4px">資料同步</h2><p 
   <div class="btns"><button class="btn" onclick="publishOut()">⬆️ 產生 data.json</button><button class="btn ghost" onclick="pullRemote(true)">🔄 重新取得線上資料</button></div>
   <p class="mute" style="font-size:12px;margin:8px 0 0">線上資料版本：${S._remoteAt?new Date(S._remoteAt).toLocaleString('zh-TW',{hour12:false}):'尚未載入'}</p></div>
  <div class="card sec" style="border-color:var(--shu)"><h3>📱 離線版（當天沒網路也能用）</h3><p class="mute" style="font-size:13px;margin:0 0 8px">產生一個<b>已含目前資料</b>的 HTML 檔，傳到 LINE 給工作人員，打開即可使用，不需網路、不用匯入。資料更新後請重新產生一次。</p>
-  <div class="btns"><button class="btn shu" onclick="offlineOut()">📱 下載／分享離線版</button><button class="btn ghost" onclick="printSheet()">📄 當天速查表（存 PDF）</button></div>
+  <div class="btns"><button class="btn shu" onclick="offlineOut()">📱 下載／分享離線版</button><button class="btn ghost" onclick="printSheet()">📄 當天速查表（存 PDF）</button><button class="btn ghost" onclick="printSeating()">🪑 列印座位表</button></div>
   <p class="mute" style="font-size:12px;margin:8px 0 0">iPhone 不一定能直接執行 HTML，請改用「當天速查表」存成 PDF。</p></div>
  <div class="card sec"><h3>② 導入（收到別人的資料）</h3><p class="mute" style="font-size:13px;margin:0 0 8px">把收到的整段文字貼進來，會<b>取代</b>這台裝置上的資料。</p>
   <textarea class="code" id="imptxt" rows="5" placeholder="在這裡貼上資料…"></textarea>
@@ -494,7 +519,7 @@ function printSheet(){
   const tr=a=>`<tr>${a.map(x=>`<td>${x}</td>`).join('')}</tr>`;
   const tl=[...S.tables].sort((a,b)=>(b.no=='主桌')-(a.no=='主桌')||String(a.no).localeCompare(String(b.no),'zh-Hant',{numeric:true}));
   const guests=[];tl.forEach(t=>splitNames(t.guests).forEach(g=>guests.push([g,t])));guests.sort((a,b)=>a[0].localeCompare(b[0],'zh-Hant'));
-  $('#print').innerHTML=`<h1>${esc(S.title)}・當天速查表</h1><div>${esc(S.couple)}｜${esc(S.date)} ${esc(S.time||'')}｜${esc(S.venue||'')}｜資料更新 ${new Date(S.updatedAt).toLocaleString('zh-TW',{hour12:false})}</div>
+  $('#print').className='';$('#print').innerHTML=`<h1>${esc(S.title)}・當天速查表</h1><div>${esc(S.couple)}｜${esc(S.date)} ${esc(S.time||'')}｜${esc(S.venue||'')}｜資料更新 ${new Date(S.updatedAt).toLocaleString('zh-TW',{hour12:false})}</div>
   <h2>宴客流程</h2>${T(['時間','環節','內容','人事物／負責','道具'],S.flow.map(f=>tr([esc(f.time),'<b>'+esc(f.name)+'</b>',esc(f.content),esc(f.people)+'<br>'+(f.staffIds||[]).map(id=>esc(staffLabel(byId('staff',id)))).join('、'),S.props.filter(p=>p.flowId==f.id).map(p=>esc(p.name)).join('、')])))}
   <h2>工作人員</h2>${T(['負責事項','姓名','電話','說明'],S.staff.map(s=>tr([esc(s.role),esc(s.name),esc(s.phone),esc(s.note)])))}
   <h2>道具</h2>${T(['道具','數量','環節','負責'],S.props.map(p=>{const f=byId('flow',p.flowId),s=byId('staff',p.staffId);return tr([esc(p.name),esc(p.qty),f?esc((f.time||'')+' '+f.name):'',s?esc(staffLabel(s)):''])}))}
@@ -541,6 +566,40 @@ function publishOut(){
     try{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(out)],{type:'application/json'}));a.download='data.json';document.body.appendChild(a);a.click();a.remove();toast('已下載 data.json，請上傳到 GitHub 取代舊檔')}catch(e){toast('下載失敗')}
     render();
   };
+}
+function printSeating(){
+  const tl=[...S.tables].sort((a,b)=>(b.no=='主桌')-(a.no=='主桌')||String(a.no).localeCompare(String(b.no),'zh-Hant',{numeric:true}));
+  if(!tl.length){toast('還沒有桌次資料');return}
+  const tn=t=>/桌/.test(t.no)?esc(t.no):esc(t.no)+' 桌';
+  const STX={ok:'已確認',wait:'待確認',spare:'預備桌'};
+  const main=tl.filter(t=>t.status!='spare'),cnt=t=>splitNames(t.guests).length;
+  const ppl=tl.reduce((a,t)=>a+cnt(t),0);
+  const side=k=>{const x=main.filter(t=>t.side==k);return `${x.length} 桌／${x.reduce((a,t)=>a+cnt(t),0)} 人`};
+  const head=(t,sub)=>`<div class="hd"><h1>${t}</h1><small>${esc(S.couple||'')}　${esc((S.date||'').replace(/-/g,'.'))}　${esc(S.venue||'')}${sub?'<br>'+sub:''}</small></div>`;
+  const upd='資料更新：'+new Date(S.updatedAt||Date.now()).toLocaleString('zh-TW',{hour12:false});
+  // 1 overview
+  let h=`<section class="sec">${head('座位總覽',upd)}
+  <div class="kpi"><div><b>${main.length}</b><span>正式桌數</span></div><div><b>${tl.length-main.length}</b><span>預備桌</span></div><div><b>${ppl}</b><span>名單總人數</span></div><div><b>${main.filter(t=>t.status=='ok').length}/${main.length}</b><span>已確認桌數</span></div></div>
+  <p class="note">男方：${side('男方')}　　女方：${side('女方')}　　共同：${side('共同')}</p>
+  <table><tr><th>桌號</th><th>桌名／分類</th><th class="n">所屬</th><th class="n">人數</th><th class="n">座位</th><th class="n">狀態</th><th>備註</th></tr>
+  ${tl.map(t=>`<tr><td><b>${tn(t)}</b></td><td>${esc(t.name||'')}</td><td class="n">${esc(t.side||'')}</td><td class="n">${cnt(t)}</td><td class="n">${t.cap||10}</td><td class="n">${STX[t.status]||''}</td><td>${esc(t.note||'')}</td></tr>`).join('')}
+  <tr class="tot"><td colspan="3">合計（不含預備桌 ${main.length} 桌）</td><td class="n">${main.reduce((a,t)=>a+cnt(t),0)}</td><td class="n">${main.reduce((a,t)=>a+(t.cap||10),0)}</td><td colspan="2"></td></tr></table>
+  <div class="sign"><span>核對人：＿＿＿＿＿＿＿＿</span><span>飯店窗口：＿＿＿＿＿＿＿＿</span><span>日期：＿＿＿＿＿＿</span></div></section>`;
+  // 2 check-in
+  h+=`<section class="sec">${head('各桌簽到單','到場的賓客請在名字前打勾')}${tl.map(t=>{const g=splitNames(t.guests);
+    return `<div class="blk"><div class="bh"><span class="no">${tn(t)}</span><span class="nm">${esc(t.name||'')}　<small>${esc(t.side||'')}${t.status=='spare'?'・預備桌':''}</small></span><span class="ct">名單 ${g.length} 人／座位 ${t.cap||10}</span></div>
+    <div class="gl">${g.map(x=>`<div><span class="box"></span>${esc(x)}</div>`).join('')}${Array.from({length:Math.max(0,Math.min(3,(t.cap||10)-g.length))},()=>'<div><span class="box"></span></div>').join('')}</div>
+    ${t.note?`<p class="note" style="margin:5pt 0 0">📝 ${esc(t.note)}</p>`:''}
+    <div class="ft"><span>實到人數：</span><i style="flex:0 0 60pt"></i><span>備註：</span><i></i></div></div>`}).join('')}</section>`;
+  // 3 index
+  let col;try{col=new Intl.Collator('zh-Hant-TW-u-co-stroke')}catch(e){col=new Intl.Collator('zh-Hant')}
+  const all=[];tl.forEach(t=>splitNames(t.guests).forEach(g=>all.push({g,t})));
+  all.sort((a,b)=>col.compare(a.g,b.g)||String(a.t.no).localeCompare(String(b.t.no),'zh-Hant',{numeric:true}));
+  if(all.length){let last='',rows='';
+    all.forEach(x=>{const f=x.g[0];if(f!==last){rows+=`<div class="g">${esc(f)}</div>`;last=f}rows+=`<div class="r"><span>${esc(x.g)}</span><b>${tn(x.t)}</b></div>`});
+    h+=`<section class="sec">${head('賓客姓名索引','依姓氏筆畫排序・共 '+all.length+' 位')}<div class="idx">${rows}</div></section>`;}
+  const pr=$('#print');pr.className='seat';pr.innerHTML=h;
+  setTimeout(()=>{try{window.print()}catch(e){toast('無法列印，請用瀏覽器直接開啟網址再試')}},300);
 }
 function importFile(inp){const f=inp.files&&inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>importText(r.result);r.readAsText(f);inp.value=''}
 
